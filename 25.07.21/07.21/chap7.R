@@ -78,3 +78,20 @@ sample_n(iris,10)
 sample_frac(iris)
 sample_frac(iris, .1)
 sample_frac(iris, .2)
+
+#7-16
+combn(1:5,3)
+x = c("red","green","blue","black","white")
+com <- combn(x,2)
+com
+str(com)
+class(com)
+typeof(com)
+ncol(com)
+for(i in 1:ncol(com)){
+  cat(com[,i],"\n")
+}
+
+choose(5,3)
+choose(5,4)
+choose(5,2)
