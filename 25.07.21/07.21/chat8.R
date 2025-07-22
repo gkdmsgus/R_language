@@ -176,93 +176,49 @@ ggplot(iris,aes(x=Sepal.Width, fill=Species,color=Species))+
 ggplot(iris,aes(x=Sepal.Width, fill=Species,color=Species))+
   geom_histogram(binwidth = 0.5, position = "stack")+
   theme(legend.position = "top")
-########################################
-#ggplot은 위 방법으로 안되고 다음으로 처리
-if(!require("gridExtra")){
-  install.packages("gridExtra")
-}
-library(gridExtra)
-g1 <- ggplot(iris,aes(x=Sepal.Width, fill=Species,color=Species))+
-  geom_histogram(binwidth = 1, position = "dodge")+
-  theme(legend.position = "top")
-g2 <- ggplot(iris,aes(x=Sepal.Width, fill=Species,color=Species))+
-  geom_histogram(binwidth = 1, position = "stack")+
-  theme(legend.position = "top")
 
-#플롯 배열, 2행 1열로 그리기
-grid.arrange(g1,g2,nrow = 1, ncol=2)
-#8-9
-ggplot(data = iris, aes(x=Petal.Length,y=Petal.Width))+
-  geom_point()
-#8-10
-ggplot(data=iris, aes(x=Petal.Length,y=Petal.Width, color = Species))+
-  geom_point(size=3)+
-  ggtitle("꽃잎의 길이와 폭")+
-  theme(plot.title = element_text(size = 25,face = "bold", colour = "steelblue"))
-#8-11
-ggplot(data = iris, aes(y= Petal.Length))+
-  geom_boxplot(fill="yellow")
-#8-12
-ggplot(data = iris,aes(y = Petal.Length,fill = Species))+
-  geom_boxplot()
-str(iris)
-boxplot(iris$Petal.Length ~ iris$Species,iris,
-        col = c("lightgray", "yellow", "skyblue"))
-#8-13
-year <- 1937:1960
-cnt <- as.vector(airmiles)
-df <- data.frame(year,cnt)
-head(df)
-
-ggplot(data = df, aes(x = year,y = cnt))+
-  geom_line(col="red")
-
-plot(airmiles)
-#ch08-sect3.R
-rm(list = ls())
-if(!require("Rtsne")) {
-  install.packages("Rtsne")
-}
+#8-14
 library(Rtsne)
 library(ggplot2)
-
 ds <- iris[,-5]
-ds
-str(ds)
 
-# 동일행 :102,143 행
-iris[102,]
-iris[104,]
-
-## 중복 데이터 제거
-duplicated(ds)
+# 중복 데이터 제거
 dup = which(duplicated(ds))
-dup#143번쨰 행 중복
-
+dup                       #143번쨰 행 중복
 ds <- ds[-dup,]
-str(ds)
+ds.y <- iris$Species[-dup]# 중복을 제외한 품종 정보
 
-ds.y <- iris$Species[-dup]#중복을 제외한 품종
-str(ds.y)
-length(ds.y)
-
-## t-SNE 실행
-tsne <- Rtsne(ds, dims=2,perplexity = 10)
-tsne
-str(tsne)
-
-tsne$Y
+##t-SNE 실행
+tsne <- Rtsne(ds,dims=2,perplexity=10)
 
 ## 축소결과 시각화
 df.tsne <- data.frame(tsne$Y)
 head(df.tsne)
-
-ggplot(df.tsne,aes(x=X1, y=X2,color=ds.y))+
+ggplot(df.tsne, aes(x=X1, y=X2,color=ds.y))+
   geom_point(size=2)
-###########################################
+
+#8-15
 install.packages(c("rgl","car"))
 
 library("car")
 library("rgl")
 library("mgcv")
 library("car")
+
+tsne <- Rtsne(ds,dims=3,perplexity = 10)
+df.tsne <- data.frame(tsne$Y)
+head(df.tsne)
+
+# 회귀면이 포함된 3차원 산점도
+scatter3d(x=df.tsne$X1,y=df.tsne$X2,z=df.tsne$X3)
+
+#  회귀면이 없는 3차원 산점도
+points <- as.integer(ds.y)
+points
+color <- c('red','green','blue')
+scatter3d(x=df.tsne$X1,y=df.tsne$X2,z=df.tsne$X3,
+          point.col = color[points],
+          surface = FALSE)
+scatter3d(x=df.tsne$X1,y=df.tsne$X2,z=df.tsne$X3,
+          point.col = color[points],
+          surface = T)
