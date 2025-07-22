@@ -97,7 +97,13 @@ test <- iris[,1:4]
 pred <- predict(mod.iris,test)
 pred <- round(pred,0)
 pred
+
 answer <- as.integer(iris$Species)
 pred == answer
+iris[pred != answer,]
+
 acc <- mean(pred == answer)
 acc
+
+146/150
+sum(pred == answer) / nrow(iris)
