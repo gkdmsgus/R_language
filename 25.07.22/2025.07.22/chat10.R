@@ -38,7 +38,7 @@ options(digits = 2)
 inspect(rules[1:10])
 
 #code 10-6
-#신뢰도 사우이 10개 규칙 출력
+#신뢰도 상위 10개 규칙 출력
 rules.sort <- sort(rules,by= 'confidence', decreasing = T)
 inspect(rules.sort[1:10])
 
@@ -51,4 +51,3 @@ plot(rules.sort,method="grouped")
 
 ## 연관 규칙의 저장
 write(rules.sort, file = "BreadBasket_rules.csv", sep=',', quote=T,row.names=F)
-
